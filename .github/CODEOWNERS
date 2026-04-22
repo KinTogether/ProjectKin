@@ -1,0 +1,8 @@
+# Repository owners
+* @Dakhissi
+
+# Security-sensitive areas require extra eyes
+/.github/             @Dakhissi
+/supabase/            @Dakhissi
+/docs/SECURITY*       @Dakhissi
+SECURITY.md           @Dakhissi

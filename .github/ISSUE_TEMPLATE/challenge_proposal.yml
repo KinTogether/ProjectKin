@@ -1,0 +1,41 @@
+name: Challenge proposal
+description: Propose a new Soul / Mind / World / Reveal challenge
+title: "[CHALLENGE] "
+labels: ["challenge", "content", "needs-review"]
+body:
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Stage
+      options:
+        - Soul
+        - Mind
+        - World
+        - Reveal
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Challenge prompt (exactly as the user will see it)
+    validations:
+      required: true
+  - type: textarea
+    id: reveals
+    attributes:
+      label: What does this reveal about the person?
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety & equality checks
+      options:
+        - label: Both users do exactly the same thing (equal exposure).
+          required: true
+        - label: Does not require a face, name, exact location, or money.
+          required: true
+        - label: Completable in under one day (Soul/Mind under 10 minutes).
+          required: true
+        - label: Safe across cultures, ages, genders, and ability levels.
+          required: true

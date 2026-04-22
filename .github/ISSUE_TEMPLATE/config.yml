@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/KinTogether/ProjectKin/security/advisories/new
+    about: Please report security vulnerabilities privately, not as public issues.
+  - name: Discussion / question
+    url: https://github.com/KinTogether/ProjectKin/discussions
+    about: For open-ended questions or philosophy discussions.

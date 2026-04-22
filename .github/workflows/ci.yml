@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-docs:
+    name: Lint markdown & repo hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check required docs exist
+        run: |
+          set -e
+          for f in README.md LICENSE CONTRIBUTING.md CODE_OF_CONDUCT.md SECURITY.md .gitignore .env.example; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Missing required file: $f"
+              exit 1
+            fi
+          done
+      - name: Ensure .env is not committed
+        run: |
+          if [ -f .env ]; then
+            echo "::error::.env must never be committed"
+            exit 1
+          fi
+
+  flutter:
+    name: Flutter analyze & test
+    runs-on: ubuntu-latest
+    if: hashFiles('mobile/pubspec.yaml') != ''
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: flutter analyze
+      - run: flutter test --coverage
+
+  supabase-sql:
+    name: Validate SQL migrations
+    runs-on: ubuntu-latest
+    if: hashFiles('supabase/migrations/**/*.sql') != ''
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: kin_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply migrations
+        env:
+          PGPASSWORD: postgres
+        run: |
+          for f in $(ls supabase/migrations/*.sql 2>/dev/null | sort); do
+            echo "Applying $f"
+            psql -h localhost -U postgres -d kin_test -v ON_ERROR_STOP=1 -f "$f"
+          done
