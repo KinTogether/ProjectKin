@@ -20,7 +20,6 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: const Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'Welcome to ProjectKin',

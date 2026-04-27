@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'core/theme.dart';
+
 import 'core/constants.dart';
+import 'core/theme.dart';
 import 'presentation/screens.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
+  try {
+    await dotenv.load(fileName: '.env');
+  } catch (_) {
+    debugPrint('No .env file found — copy .env.example to .env');
+  }
   
   runApp(const ProviderScope(child: ProjectKinApp()));
 }
 
-final routerProvider = Provider<GoRouter>((ref) {
-  return GoRouter(
+final routerProvider = Provider<GoRouter>((ref) => GoRouter(
     initialLocation: RouteConstants.home,
     routes: [
       GoRoute(
@@ -30,8 +34,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ProfileScreen(),
       ),
     ],
-  );
-});
+  ));
 
 class ProjectKinApp extends ConsumerWidget {
   const ProjectKinApp({super.key});

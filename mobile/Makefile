@@ -32,7 +32,7 @@ analyze:
 
 # Format code
 format:
-	flutter format .
+	dart format .
 
 # Get dependencies
 deps:
